@@ -3,22 +3,34 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class FilmControllerTest {
     private FilmController filmController;
+    private FilmStorage filmStorage;
+    private FilmService filmService;
     private Film film;
 
     @BeforeEach
     void setUp() {
-        filmController = new FilmController();
-        film = new Film(1, "New film", "Description of New film",
-                LocalDate.of(1800, 11, 11), 180);
+        filmController = new FilmController(filmStorage, filmService);
+        film = Film.builder()
+                .name("New film")
+                .description("Description of New film")
+                .releaseDate(LocalDate.of(1800, 11, 11))
+                .duration(180)
+                .build();
     }
 
     @Test

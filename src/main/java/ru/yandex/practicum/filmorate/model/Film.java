@@ -12,13 +12,15 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+
 @Builder
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Data
+
 public class Film {
-    private int id;
+    private Long id;
 
     @NotNull (message = "Укажите название фильма")
     @NotBlank (message = "Название фильма не может быть пустым")
@@ -34,4 +36,17 @@ public class Film {
 
     @Positive (message = "Продолжительность фильма должна быть положительной")
     private int duration;
+
+    private Set<Long> likes;
+
+    public Film(Long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        if (likes == null) {
+            this.likes = new HashSet<>();
+        }
+    }
 }
