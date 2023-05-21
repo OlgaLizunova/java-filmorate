@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -22,8 +24,10 @@ class FilmControllerTest {
 
     @BeforeEach
     void setUp() {
+        filmStorage = new InMemoryFilmStorage();
         filmController = new FilmController(filmStorage, filmService);
         film = Film.builder()
+                .id(1l)
                 .name("New film")
                 .description("Description of New film")
                 .releaseDate(LocalDate.of(1800, 11, 11))
@@ -41,7 +45,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowExceptionThenUpdateFilmWithIncorrectId() {
-        FilmValidationException exception = Assertions.assertThrows(FilmValidationException.class,
+        FilmNotFoundException exception = Assertions.assertThrows(FilmNotFoundException.class,
                 () -> filmController.updateFilm(film));
         assertEquals("Фильма с id 1 не существует", exception.getMessage());
     }
