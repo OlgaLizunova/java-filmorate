@@ -27,7 +27,7 @@ class FilmControllerTest {
         filmStorage = new InMemoryFilmStorage();
         filmController = new FilmController(filmStorage, filmService);
         film = Film.builder()
-                .id(1l)
+                .id(1L)
                 .name("New film")
                 .description("Description of New film")
                 .releaseDate(LocalDate.of(1800, 11, 11))
