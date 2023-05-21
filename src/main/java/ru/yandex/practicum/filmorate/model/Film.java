@@ -22,19 +22,19 @@ import java.util.Set;
 public class Film {
     private Long id;
 
-    @NotNull (message = "Укажите название фильма")
-    @NotBlank (message = "Название фильма не может быть пустым")
+    @NotNull(message = "Укажите название фильма")
+    @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
 
-    @NotBlank (message = "Описание фильма не может быть пустым")
-    @Size (max = 200, message = "Максимальная длина описания — 200 символов")
+    @NotBlank(message = "Описание фильма не может быть пустым")
+    @Size(max = 200, message = "Максимальная длина описания — 200 символов")
     private String description;
 
-    @NotNull (message = "Укажите дату релиза")
+    @NotNull(message = "Укажите дату релиза")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 
-    @Positive (message = "Продолжительность фильма должна быть положительной")
+    @Positive(message = "Продолжительность фильма должна быть положительной")
     private int duration;
 
     private Set<Long> likes;
