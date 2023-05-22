@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
@@ -17,25 +18,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserStorage userStorage;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserStorage userStorage, UserService userService) {
-        this.userStorage = userStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping()
     public ResponseEntity<User> postUser(@Valid @RequestBody User user) {
         log.info("получен запрос на добавление нового пользователя {}", user);
-        return new ResponseEntity<>(userStorage.addUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
     }
 
     @PutMapping()
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
         log.info("Получен запрос на обновление данных пользователя {}", user);
-        return new ResponseEntity<>(userStorage.updateUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
@@ -47,7 +46,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         log.info("Получен запрос на получение данных пользователя с Id = {}", id);
-        return new ResponseEntity<>(userStorage.getUserById(id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/friends")
@@ -71,11 +70,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
         log.info("Получен запрос на удаление пользователя с Id {}", id);
-        return new ResponseEntity<>(userStorage.deleteUser(id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<Collection<User>> getAllUser() {
-        return new ResponseEntity<>(userStorage.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 }

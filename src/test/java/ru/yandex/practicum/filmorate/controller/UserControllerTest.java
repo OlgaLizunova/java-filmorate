@@ -3,12 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.service.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.LocalDate;
 
@@ -17,14 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserControllerTest {
     private UserController userController;
     private UserStorage userStorage;
-    private UserService userService;
+    private FilmStorage filmStorage;
+    private UserServiceImpl userService;
     private User user1;
     private User user2;
 
     @BeforeEach
     void setUp() {
+        filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
-        userController = new UserController(userStorage, userService);
+        userService = new UserServiceImpl(userStorage);
+        userController = new UserController(userService);
         user1 = User.builder()
                 .id(1L)
                 .login("maro")

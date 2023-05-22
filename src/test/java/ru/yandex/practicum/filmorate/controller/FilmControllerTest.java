@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.service.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.LocalDate;
 
@@ -19,13 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
     private FilmController filmController;
     private FilmStorage filmStorage;
-    private FilmService filmService;
+    private UserStorage userStorage;
+    private FilmServiceImpl filmService;
     private Film film;
 
     @BeforeEach
     void setUp() {
         filmStorage = new InMemoryFilmStorage();
-        filmController = new FilmController(filmStorage, filmService);
+        userStorage = new InMemoryUserStorage();
+        filmService = new FilmServiceImpl(filmStorage, userStorage);
+        filmController = new FilmController(filmService);
         film = Film.builder()
                 .id(1L)
                 .name("New film")
