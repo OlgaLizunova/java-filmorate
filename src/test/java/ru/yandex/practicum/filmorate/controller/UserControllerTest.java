@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.LocalDate;
 
@@ -12,16 +14,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     private UserController userController;
+    private UserStorage userStorage;
+    private FilmStorage filmStorage;
+    private UserServiceImpl userService;
     private User user1;
     private User user2;
 
     @BeforeEach
     void setUp() {
-        userController = new UserController();
-        user1 = new User(1, "mail@mail.ru", "newLogin", "",
-                LocalDate.of(1980, 10, 10));
-        user2 = new User(1, "mail1@mail.ru", "new Login", "",
-                LocalDate.of(1980, 10, 10));
+        filmStorage = new InMemoryFilmStorage();
+        userStorage = new InMemoryUserStorage();
+        userService = new UserServiceImpl(userStorage);
+        userController = new UserController(userService);
+        user1 = User.builder()
+                .id(1L)
+                .login("maro")
+                .email("maro@mail.ru")
+                .birthday(LocalDate.of(1980, 12, 30))
+                .build();
+        user2 = User.builder()
+                .id(2L)
+                .name("User2")
+                .login("taro 2")
+                .email("taro@mail.ru")
+                .birthday(LocalDate.of(1970, 9, 30))
+                .build();
     }
 
     @Test
@@ -40,7 +57,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionThenUpdateUserWithIncorrectId() {
-        UserValidationException exception = Assertions.assertThrows(UserValidationException.class,
+        UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class,
                 () -> userController.updateUser(user1));
         assertEquals("Пользователя с id=1 не существует", exception.getMessage());
     }
