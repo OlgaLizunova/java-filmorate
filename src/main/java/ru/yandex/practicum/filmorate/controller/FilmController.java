@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.service.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.service.film.FilmServiceImpl;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -54,7 +54,7 @@ public class FilmController {
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<Film>> getAllFilm() {
+    public ResponseEntity<List<Film>> getAllFilm() {
         log.info("Получен запрос на список всех фильмов");
         return new ResponseEntity<>(filmService.getAllFilms(), HttpStatus.OK);
     }

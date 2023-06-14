@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public class FilmValidationException extends RuntimeException {
+public class ValidationException extends RuntimeException {
     @Getter
     private String message;
 }

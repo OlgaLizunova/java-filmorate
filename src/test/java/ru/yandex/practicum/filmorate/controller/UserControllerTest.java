@@ -5,8 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.*;
+import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.friend.FriendStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 
@@ -16,6 +20,7 @@ class UserControllerTest {
     private UserController userController;
     private UserStorage userStorage;
     private FilmStorage filmStorage;
+    private FriendStorage friendStorage;
     private UserServiceImpl userService;
     private User user1;
     private User user2;
@@ -24,7 +29,7 @@ class UserControllerTest {
     void setUp() {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
-        userService = new UserServiceImpl(userStorage);
+        userService = new UserServiceImpl(userStorage, friendStorage);
         userController = new UserController(userService);
         user1 = User.builder()
                 .id(1L)
@@ -49,7 +54,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowExceptionThenPostUserWithIncorrectLogin() {
-        UserValidationException exception = Assertions.assertThrows(UserValidationException.class,
+        ValidationException exception = Assertions.assertThrows(ValidationException.class,
                 () -> userController.postUser(user2));
         assertEquals("Логин не должен содержать пробелы", exception.getMessage());
     }

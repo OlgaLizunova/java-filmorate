@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.user;
 
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -13,7 +13,7 @@ public interface UserService {
 
     User getUserById(Long userId);
 
-    Collection<User> getUsers();
+    List<User> getUsers();
 
     void addFriend(Long userId, Long friendId);
 
@@ -21,5 +21,5 @@ public interface UserService {
 
     List<User> getFriends(Long userId);
 
-    public List<User> getCommonFriends(Long firstUserId, Long secondUserId);
+    List<User> getCommonFriends(Long firstUserId, Long secondUserId);
 }
