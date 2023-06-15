@@ -87,7 +87,6 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM films WHERE id = ?", filmId);
         if (filmRows.first()) {
             Mpa mpa = mpaService.getMpaById(filmRows.getInt("rating_id"));
-            Set<Genre> genres = genreService.getFilmGenres(filmId);
             film = new Film(
                     filmRows.getLong("id"),
                     filmRows.getString("name"),
@@ -96,12 +95,9 @@ public class FilmDbStorage implements FilmStorage {
                     filmRows.getInt("duration"),
                     new HashSet<>(likeStorage.getLikes(filmRows.getLong("id"))),
                     mpa,
-                    genres);
+                    new HashSet<Genre>(genreService.getFilmGenres(filmId)));
         } else {
             throw new FilmNotFoundException("Фильм с ID=" + filmId + " не найден!");
-        }
-        if (film.getGenres().isEmpty()) {
-            film.setGenres(null);
         }
         return film;
     }
