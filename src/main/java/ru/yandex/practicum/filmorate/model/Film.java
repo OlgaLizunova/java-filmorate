@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Builder;
 import lombok.Data;
 
@@ -40,6 +41,7 @@ public class Film {
 
     @NotNull
     private Mpa mpa;
+
     private Set<Genre> genres = new HashSet<>();
 
     public Film(Long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likes, Mpa mpa, Set<Genre> genres) {

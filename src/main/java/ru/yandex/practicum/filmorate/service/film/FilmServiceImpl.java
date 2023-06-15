@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,7 +29,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film addFilm(Film film) {
-
+        if (!isValid(film)) {
+            throw new ValidationException("Проверьте все поля");
+        }
         return filmStorage.addFilm(film);
     }
 
@@ -87,5 +90,13 @@ public class FilmServiceImpl implements FilmService {
             new ValidationException("Количество фильмов для вывода не должно быть меньше 1");
         }
         return likeStorage.getPopular(count);
+    }
+
+    public boolean isValid(Film film) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+
+            throw new ValidationException("Дата релиза не должна быть раньше 28 декабря 1895 года");
+        }
+        return true;
     }
 }

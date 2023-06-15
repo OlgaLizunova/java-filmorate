@@ -12,11 +12,11 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
-    private long userId = 1;
+    private long userId;
 
     private long generatedId() {
         log.info("Создан новый userId {}", userId);
-        userId++;
+        //userId++;
         return userId;
     }
 
