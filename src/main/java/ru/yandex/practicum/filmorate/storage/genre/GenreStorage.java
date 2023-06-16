@@ -18,7 +18,6 @@ public class GenreStorage {
 
     @Autowired
     public GenreStorage(JdbcTemplate jdbcTemplate) {
-
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -54,6 +53,7 @@ public class GenreStorage {
 
     public void add(Film film) {
         if (film.getGenres() != null) {
+            String sql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
             for (Genre genre : film.getGenres()) {
                 jdbcTemplate.update("INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)",
                         film.getId(), genre.getId());

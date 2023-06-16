@@ -38,9 +38,10 @@ public class FilmDbStorage implements FilmStorage {
         film.setId(simpleJdbcInsert.executeAndReturnKey(film.toMap()).longValue());
         film.setMpa(mpaService.getMpaById(film.getMpa().getId()));
         if (film.getGenres() != null) {
-            for (Genre genre : film.getGenres()) {
-                genre.setName(genreService.getGenreById(genre.getId()).getName());
-            }
+            film.setGenres(film.getGenres().stream()
+                    .map(g -> genreService.getGenreById(g.getId()))
+                    .sorted(Comparator.comparing(Genre::getId))
+                    .collect(Collectors.toCollection(LinkedHashSet::new)));
             genreService.putGenres(film);
         }
         return film;
@@ -67,9 +68,10 @@ public class FilmDbStorage implements FilmStorage {
                         .sorted(Comparator.comparing(Genre::getId))
                         .collect(Collectors.toList());
                 film.setGenres(new LinkedHashSet<>(sortGenres));
-                for (Genre genre : film.getGenres()) {
-                    genre.setName(genreService.getGenreById(genre.getId()).getName());
-                }
+                film.setGenres(film.getGenres().stream()
+                        .map(g -> genreService.getGenreById(g.getId()))
+                        .sorted(Comparator.comparing(Genre::getId))
+                        .collect(Collectors.toCollection(LinkedHashSet::new)));
             }
             genreService.putGenres(film);
             return film;
