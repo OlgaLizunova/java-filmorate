@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -72,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<User>> getAllUser() {
+    public ResponseEntity<List<User>> getAllUser() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 }

@@ -1,14 +1,14 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -26,7 +26,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         if (!isValid(film)) {
-            throw new FilmValidationException("Проверьте все поля");
+            throw new ValidationException("Проверьте все поля");
         }
         film.setId(filmId);
         log.info("Фильм {} добавлен в коллекцию", film.getName());
@@ -38,7 +38,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (film.getId() == null) {
-            throw new FilmValidationException("Передан пустой аргумент!");
+            throw new ValidationException("Передан пустой аргумент!");
         }
         if (!films.containsKey(film.getId())) {
             log.error("Фильма с id={} не существует", film.getId());
@@ -62,7 +62,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film deleteFilm(Long filmId) {
         if (filmId == null) {
-            throw new FilmValidationException("Передан пустой аргумент!");
+            throw new ValidationException("Передан пустой аргумент!");
         }
         if (!films.containsKey(filmId)) {
             log.error("Фильма с id={} не существует", filmId);
@@ -72,15 +72,15 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Collection<Film> getAllFilms() {
+    public List<Film> getAllFilms() {
         log.info("Получен запрос на список всех фильмов");
-        return films.values();
+        return new ArrayList<>(films.values());
     }
 
     public boolean isValid(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.error("Дата релиза не должна быть раньше 28 декабря 1895 года");
-            throw new FilmValidationException("Дата релиза не должна быть раньше 28 декабря 1895 года");
+            throw new ValidationException("Дата релиза не должна быть раньше 28 декабря 1895 года");
         }
         return true;
     }
